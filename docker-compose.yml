@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  node_serve:
+    build: .
+    container_name: serve
+    ports:
+      - "80:8080"
+    volumes:
+      - .:/node_serve
+      - /node_serve/node_modules
+    command: npm run start
+    depends_on: 
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    expose:
+      - 27017
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./data/db:/data/db
+  es:
+    image: elasticsearch:7.6.0
+    container_name: es
