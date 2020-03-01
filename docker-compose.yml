@@ -11,7 +11,13 @@ services:
       - .:/app
       - /app/node_modules
     command: npm run start
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: admin
     depends_on: 
+      - mongodb
+    links:
       - mongodb
   mongodb:
     image: mongo:latest
@@ -19,8 +25,9 @@ services:
     expose:
       - 27017
     environment: 
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: movies
 #    volumes:
 #      - ./data/db:/data/db
 #  es:

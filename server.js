@@ -1,20 +1,16 @@
-'use strict';
-
 const express = require('express');
-//const router = express.Router();  
 const mongoose = require('mongoose');
 
-const server = 'mongodb:27017'; // REPLACE WITH YOUR DB SERVER
-const database = 'movie';      // REPLACE WITH YOUR DB NAME
+const SERVER = 'mongodb:27017'; 
 
-mongoose.connect(`mongodb://${server}/${database}`, { useNewUrlParser: true, useUnifiedTopology: true })
-const db = mongoose.connection;
+const MONGO_INITDB_ROOT_USERNAME = process.env.MONGO_INITDB_ROOT_USERNAME || "admin";
+const MONGO_INITDB_ROOT_PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD || "admin";
+const MONGO_INITDB_DATABASE = process.env.MONGO_INITDB_DATABASE || "admin";
 
-db.on('error', error => console.log("AZEDOU", error));
-
-db.once('open', function () {
-  console.log('Conectado ao MongoDB.')
-});
+const MONGO_HOST = MONGO_INITDB_ROOT_USERNAME+":"+MONGO_INITDB_ROOT_PASSWORD;
+mongoose.connect(`mongodb://${MONGO_HOST}@${SERVER}/${MONGO_INITDB_DATABASE}`, { useNewUrlParser: true, useUnifiedTopology: true})
+  .then(_ => console.log("Connection with mongodb: OK"))
+  .catch(error => console.log("Error to connect with mongodb!", error))
 
 const Schema = mongoose.Schema;
 
@@ -27,13 +23,33 @@ var movieSchema = new Schema({
   year: Number,
 }, { collection: 'movies' });
 
-const movie = mongoose.model('Movie', movieSchema);
+const Movie = mongoose.model('Movie', movieSchema);
+
+var count = 0;
 
 // App
 const app = express();
 app.get('/', (req, res) => {
-  res.send(JSON.stringify(movie));
+  try {
+    const myMovie = new Movie({name: "name" + count, year: count});
+    myMovie.save()
+      .then(data => console.log({data}))
+      .catch(error => console.log({error}))
+    count++;
+    res.send(JSON.stringify(myMovie));
+  } catch (error) {
+    res.send(JSON.stringify(error))
+  }
 });
+
+app.get('/all', async (req, res) =>{ 
+  try {
+    const movies = await Movie.find();
+    res.send(JSON.stringify(movies))
+  } catch (error) {
+    res.send(JSON.stringify(error))
+  }
+})
 
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
