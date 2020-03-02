@@ -11,25 +11,26 @@ services:
       - .:/app
       - /app/node_modules
     command: npm run start
-    environment: 
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: admin
     depends_on: 
       - mongodb
+      - es
     links:
       - mongodb
+      - es
   mongodb:
     image: mongo:latest
     container_name: mongodb
     expose:
       - 27017
-    environment: 
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: movies
+#    entrypoint: [ "/usr/bin/mongod", "--replSet", "rs", "--journal", "--smallfiles", "--rest" ]
+
 #    volumes:
 #      - ./data/db:/data/db
-#  es:
-#    image: elasticsearch:7.6.0
-#    container_name: es
+  es:
+    image: elasticsearch:7.6.0
+    container_name: es
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment: 
+      - discovery.type=single-node

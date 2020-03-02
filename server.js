@@ -1,14 +1,16 @@
 const express = require('express');
+const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 
-const SERVER = 'mongodb:27017'; 
+const axios = require('axios');
 
-const MONGO_INITDB_ROOT_USERNAME = process.env.MONGO_INITDB_ROOT_USERNAME || "admin";
-const MONGO_INITDB_ROOT_PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD || "admin";
-const MONGO_INITDB_DATABASE = process.env.MONGO_INITDB_DATABASE || "admin";
+const { Client } = require('@elastic/elasticsearch')
+const esClient = new Client({ node: 'http://es:9200' })
 
-const MONGO_HOST = MONGO_INITDB_ROOT_USERNAME+":"+MONGO_INITDB_ROOT_PASSWORD;
-mongoose.connect(`mongodb://${MONGO_HOST}@${SERVER}/${MONGO_INITDB_DATABASE}`, { useNewUrlParser: true, useUnifiedTopology: true})
+const SERVER = 'mongodb:27017';
+
+
+mongoose.connect(`mongodb://${SERVER}/movie`, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(_ => console.log("Connection with mongodb: OK"))
   .catch(error => console.log("Error to connect with mongodb!", error))
 
@@ -18,38 +20,76 @@ const Schema = mongoose.Schema;
 const PORT = process.env.PORT || 8080;
 const HOST = process.env.HOST || '0.0.0.0';
 
+function createApiUrl(name, year) {
+  const TMDB_BASE = "https://api.themoviedb.org/3/search/movie?"
+  const TMDB_KEY = "008632f4207ede7628503077ba6b93f5"
+  const TMDB_LANGUAGE = "pt-BR"
+  return `${TMDB_BASE}api_key=${TMDB_KEY}&language=${TMDB_LANGUAGE}&query=${name}&page=1&include_adult=true&year=${year}`
+}
+
 var movieSchema = new Schema({
   name: { type: String, required: true },
-  year: Number,
-}, { collection: 'movies' });
+  year: { type: String, required: true },
+  overview: { type: String, required: true },
+  _id: {type: Number, required: true}
+});
 
 const Movie = mongoose.model('Movie', movieSchema);
 
-var count = 0;
-
 // App
 const app = express();
-app.get('/', (req, res) => {
-  try {
-    const myMovie = new Movie({name: "name" + count, year: count});
-    myMovie.save()
-      .then(data => console.log({data}))
-      .catch(error => console.log({error}))
-    count++;
-    res.send(JSON.stringify(myMovie));
-  } catch (error) {
-    res.send(JSON.stringify(error))
-  }
-});
+app.use(bodyParser.json());
 
-app.get('/all', async (req, res) =>{ 
+app.get('/movie', async (req, res) => {
+  const { search } = req.query;
+
   try {
-    const movies = await Movie.find();
-    res.send(JSON.stringify(movies))
+    const { body } = await esClient.search({
+      index: 'movies',
+      body: {
+        query: {
+          multi_match: {
+            query: `.*${search}.*`,
+            fields:["title", "overview"]
+          }
+          
+        }
+      }
+    })
+    
+    if(body.hits.total.value){
+      res.send(body.hits.hits.map(movie => movie._source));
+    }
   } catch (error) {
-    res.send(JSON.stringify(error))
+    res.status(404);
+    res.send("Not found");
   }
 })
+
+app.post('/movie', async (req, res) => {
+  const { name, year } = req.query;
+  const URL_API = createApiUrl(name, year);
+
+  try {
+    const result = await axios.get(URL_API);
+    const data = result.data.results.shift()
+
+    if(await Movie.findById(data.id)){
+      return res.send(data)
+    }
+
+    const myMovie = new Movie({ name: data.title, year: data.release_date, overview: data.overview, _id: data.id });
+    await myMovie.save()
+    await esClient.index({
+      index: 'movies',
+      body: data
+    })
+    res.send(data);
+  } catch (error) {
+    res.status(401)
+    res.send(error);
+  }
+});
 
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
