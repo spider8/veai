@@ -24,7 +24,10 @@ function createApiUrl(name, year) {
   const TMDB_BASE = "https://api.themoviedb.org/3/search/movie?"
   const TMDB_KEY = "008632f4207ede7628503077ba6b93f5"
   const TMDB_LANGUAGE = "pt-BR"
-  return `${TMDB_BASE}api_key=${TMDB_KEY}&language=${TMDB_LANGUAGE}&query=${name}&page=1&include_adult=true&year=${year}`
+  
+  const url = `${TMDB_BASE}api_key=${TMDB_KEY}&language=${TMDB_LANGUAGE}&query=${name}&page=1&include_adult=true`
+  if(year) url += `&year=${year}`
+  return url
 }
 
 var movieSchema = new Schema({
@@ -68,6 +71,12 @@ app.get('/movie', async (req, res) => {
 
 app.post('/movie', async (req, res) => {
   const { name, year } = req.query;
+
+  if(!name){
+    res.status(422)
+    res.send("Required name param")
+  }
+
   const URL_API = createApiUrl(name, year);
 
   try {
