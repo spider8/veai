@@ -1,0 +1,12 @@
+.search-box-container {
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 500px;
+    height: 300px;
+    color: white;
+    border-radius: 3px;
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}

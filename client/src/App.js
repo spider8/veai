@@ -8,18 +8,23 @@ import StoryCard from "./Components/StoryCard";
 import SearchBar from "./Components/SearchBar";
 import WrapContent from "./Components/WrapContent";
 import FabButton from "./Components/FabButton";
-import AddMovie from "./Components/AddMovie"
+import AddMovie from "./Components/AddMovie";
+import SearchBox from './Components/SearchBox'
 
 function App() {
+  const [showStory, setShowStory] = useState(false);
+  const [movies, setMovies] = useState([]);
+
   return (
     <Container>
       <Header />
       <WrapContent>
-        <StoryCard />
+        {showStory && <StoryCard />}
         <SearchBar />
+        {!showStory && <SearchBox>Oi</SearchBox>}
       </WrapContent>
       <FabButton>
-        <AddMovie/>
+        <AddMovie />
       </FabButton>
     </Container>
   );
