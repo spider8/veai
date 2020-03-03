@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
+var cors = require('cors')
 
 const axios = require('axios');
 
@@ -24,9 +25,9 @@ function createApiUrl(name, year) {
   const TMDB_BASE = "https://api.themoviedb.org/3/search/movie?"
   const TMDB_KEY = "008632f4207ede7628503077ba6b93f5"
   const TMDB_LANGUAGE = "pt-BR"
-  
-  const url = `${TMDB_BASE}api_key=${TMDB_KEY}&language=${TMDB_LANGUAGE}&query=${name}&page=1&include_adult=true`
-  if(year) url += `&year=${year}`
+
+  var url = `${TMDB_BASE}api_key=${TMDB_KEY}&language=${TMDB_LANGUAGE}&query=${name}&page=1&include_adult=true`
+  if (year) url += `&year=${year}`
   return url
 }
 
@@ -34,7 +35,7 @@ var movieSchema = new Schema({
   name: { type: String, required: true },
   year: { type: String, required: true },
   overview: { type: String, required: true },
-  _id: {type: Number, required: true}
+  _id: { type: Number, required: true }
 });
 
 const Movie = mongoose.model('Movie', movieSchema);
@@ -42,6 +43,7 @@ const Movie = mongoose.model('Movie', movieSchema);
 // App
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/movie', async (req, res) => {
   const { search } = req.query;
@@ -53,16 +55,15 @@ app.get('/movie', async (req, res) => {
         query: {
           multi_match: {
             query: `.*${search}.*`,
-            fields:["title", "overview"]
+            fields: ["title", "overview"]
           }
-          
+
         }
       }
     })
-    
-    if(body.hits.total.value){
-      res.send(body.hits.hits.map(movie => movie._source));
-    }
+
+    res.send(body.hits.hits.map(movie => movie._source));
+
   } catch (error) {
     res.status(404);
     res.send("Not found");
@@ -72,7 +73,7 @@ app.get('/movie', async (req, res) => {
 app.post('/movie', async (req, res) => {
   const { name, year } = req.query;
 
-  if(!name){
+  if (!name) {
     res.status(422)
     res.send("Required name param")
   }
@@ -83,8 +84,8 @@ app.post('/movie', async (req, res) => {
     const result = await axios.get(URL_API);
     const data = result.data.results.shift()
 
-    if(await Movie.findById(data.id)){
-      return res.send(data)
+    if (await Movie.findById(data.id)) {
+      return res.status(409).send("Movie already indexed")
     }
 
     const myMovie = new Movie({ name: data.title, year: data.release_date, overview: data.overview, _id: data.id });
