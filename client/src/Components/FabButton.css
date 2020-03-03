@@ -1,0 +1,17 @@
+.container-fab {
+    position: absolute;
+    background:transparent;
+    right: 2rem;
+    bottom: 2rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.fab-button {
+    background:#F40612;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 100%;
+    border: none;
+    box-shadow: 0 6px 14px 0 #666;
+}

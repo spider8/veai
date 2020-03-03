@@ -1,0 +1,47 @@
+.add-movie-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  border-radius: 2px;
+  margin-right: 1rem;
+  padding:1rem;
+}
+
+.add-movie-button {
+    color: white;
+    border:none;
+    height: 100%;
+    font-size: 30px;
+    padding: 10px;
+    border-left: 1px solid #333333;
+    border-radius: 1px;
+}
+
+.add-movie-sucess {
+    background: #27A75D;
+}
+
+.add-movie-error {
+    background: #D3514D;
+}
+
+.add-movie-ready {
+    background: #F3A813;
+}
+
+.add-movie-input {
+    color: white;
+    border:none;
+    height: 100%;
+    font-size: 30px;
+    padding: 10px;
+    border-left: 1px solid #333333;
+    border-radius: 1px;
+}
+
+.add-movie-input::placeholder{
+    font-size: 1.5rem;
+    align-items: center;
+}

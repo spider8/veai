@@ -1,0 +1,26 @@
+.container-form {
+    width: 500px;
+    height: 70px;
+    display: flex;
+}
+
+.search-bar {
+    padding: 10px 10px 0;
+    width: 100%;
+}
+
+.submit-button {
+    background: #F40612;
+    color: white;
+    border:none;
+    height: 100%;
+    font-size: 30px;
+    padding: 10px;
+    border-left: 1px solid #333333;
+    border-radius: 1px;
+}
+
+.search-bar::placeholder {
+    font-size: 1.5rem;
+    align-items: center;
+}

@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  node_serve:
+    build: .
+    container_name: serve
+    ports:
+      - "80:8080"
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run start
+    depends_on: 
+      - mongodb
+      - es
+    links:
+      - mongodb
+      - es
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    expose:
+      - 27017
+#    entrypoint: [ "/usr/bin/mongod", "--replSet", "rs", "--journal", "--smallfiles", "--rest" ]
+
+#    volumes:
+#      - ./data/db:/data/db
+  es:
+    image: elasticsearch:7.6.0
+    container_name: es
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment: 
+      - discovery.type=single-node
