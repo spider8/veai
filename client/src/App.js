@@ -2,17 +2,23 @@ import React, { useState } from 'react';
 import './App.css';
 import axios from "axios";
 
+import Container from "./Components/Container"
+import Header from "./Components/Header"
+import StoryCard from "./Components/StoryCard"
+import SearchBar from "./Components/SearchBar"
+import WrapContent from './Components/WrapContent';
+
 function App() {
-  const [list, setList] = useState([]);
-  const [search, setSearch] = useState('');
-
   return (
-    <div className="App">
-      <div className="App-header">
-      <img className="App-logo" src="https://fontmeme.com/permalink/200303/0e781453e23c7d4a456b9cfb64e12c05.png" alt="netflix-font" border="0"/>
+    <Container>
+      <Header />
+      <WrapContent>
+        <StoryCard />
+        <SearchBar />
+      </WrapContent>
 
-      </div>
-        <form >
+
+      {/* <form >
           <input name="search" onChange={e => setSearch(e.target.value)} value={search} />
           <input type="submit" onClick={async e => {
             e.preventDefault();
@@ -22,9 +28,9 @@ function App() {
         </form>
         <ul>
           {list.map(item => <li key={item.id}>{item.overview}</li>)}
-        </ul>
-    </div>
-      );
-    }
-    
+        </ul> */}
+    </Container>
+  );
+}
+
 export default App;

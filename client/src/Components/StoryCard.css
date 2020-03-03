@@ -1,0 +1,13 @@
+.container-story {
+    height: 450px;
+    background:transparent;
+    width: 950px;
+    color: white;
+    text-align: center;
+    position: relative;
+    margin-top: 10 rem;
+}
+
+.story-title {
+    font-size: 62px;
+}
