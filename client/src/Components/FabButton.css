@@ -4,6 +4,7 @@
     right: 2rem;
     bottom: 2rem;
     display: flex;
+    align-items: flex-end;
 }
 
 .fab-button {

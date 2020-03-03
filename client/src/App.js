@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 import axios from "axios";
 
-import Container from "./Components/Container"
-import Header from "./Components/Header"
-import StoryCard from "./Components/StoryCard"
-import SearchBar from "./Components/SearchBar"
-import WrapContent from './Components/WrapContent';
-import FabButton from "./Components/FabButton"
+import Container from "./Components/Container";
+import Header from "./Components/Header";
+import StoryCard from "./Components/StoryCard";
+import SearchBar from "./Components/SearchBar";
+import WrapContent from "./Components/WrapContent";
+import FabButton from "./Components/FabButton";
+import AddMovie from "./Components/AddMovie"
 
 function App() {
   return (
@@ -17,8 +18,9 @@ function App() {
         <StoryCard />
         <SearchBar />
       </WrapContent>
-      <FabButton/>
-
+      <FabButton>
+        <AddMovie/>
+      </FabButton>
     </Container>
   );
 }
