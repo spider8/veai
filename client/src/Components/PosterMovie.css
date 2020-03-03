@@ -1,0 +1,6 @@
+.poster-movie-container {
+  max-width: 300px;
+  height: auto;
+  box-shadow: 5px 5px 25px 5px rgba(0, 0, 0, 0.59);
+  margin: 10px;
+}
