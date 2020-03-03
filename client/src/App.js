@@ -7,6 +7,7 @@ import Header from "./Components/Header"
 import StoryCard from "./Components/StoryCard"
 import SearchBar from "./Components/SearchBar"
 import WrapContent from './Components/WrapContent';
+import FabButton from "./Components/FabButton"
 
 function App() {
   return (
@@ -16,19 +17,8 @@ function App() {
         <StoryCard />
         <SearchBar />
       </WrapContent>
+      <FabButton/>
 
-
-      {/* <form >
-          <input name="search" onChange={e => setSearch(e.target.value)} value={search} />
-          <input type="submit" onClick={async e => {
-            e.preventDefault();
-            const { data } = await axios.get("http://localhost:80/movie?search=" + search);
-            setList(data);
-          }} />
-        </form>
-        <ul>
-          {list.map(item => <li key={item.id}>{item.overview}</li>)}
-        </ul> */}
     </Container>
   );
 }
