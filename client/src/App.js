@@ -13,7 +13,7 @@ import SearchBox from "./Components/SearchBox";
 import PosterMovie from "./Components/PosterMovie";
 
 function App() {
-  const [showStory, setShowStory] = useState(false);
+  const [showStory, setShowStory] = useState(true);
   const [movies, setMovies] = useState([]);
 
   async function SearchMovie(value) {
@@ -21,12 +21,13 @@ function App() {
     setMovies(movies.data);
   }
 
+
   return (
     <Container>
       <Header />
       <WrapContent>
         {showStory && <StoryCard />}
-        <SearchBar submit={SearchMovie} />
+        <SearchBar focus={_ => setShowStory(false)}  submit={SearchMovie} />
         {!showStory && (
           <SearchBox>
             {movies.map(movie => (
