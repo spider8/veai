@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import "./SearchBar.css";
 
-export default function SearchBar({ submit }) {
+export default function SearchBar({ submit, focus, blur }) {
   const [value, setValue] = useState("");
-  console.log({ submit });
   return (
     <form className="container-form">
       <input
         className="search-bar"
         type="text"
         value={value}
+        onFocus={focus}
+        onBlur={blur}
         onChange={e => setValue(e.target.value)}
         placeholder="Filme"
       />

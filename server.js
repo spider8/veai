@@ -39,6 +39,7 @@ var movieSchema = new Schema({
   name: { type: String, required: true },
   year: { type: String, required: true },
   overview: { type: String, required: true },
+  poster_path: {type: String, required: true},
   _id: { type: Number, required: true }
 });
 
@@ -59,7 +60,7 @@ app.get("/movie", async (req, res) => {
         query: {
           multi_match: {
             query: `.*${search}.*`,
-            fields: ["title", "overview"]
+            fields: ["title"]
           }
         }
       }
@@ -73,6 +74,15 @@ app.get("/movie", async (req, res) => {
     res.send(error);
   }
 });
+
+app.get("/movie/:id", async(req, res) =>{
+  const {id} = req.params;
+  if(!id){
+    res.status(409).send("Id param required")
+  }
+  const data = await Movie.findById(id);
+  res.send(data);
+})
 
 app.post("/movie", async (req, res) => {
   const { name, year } = req.query;
@@ -96,8 +106,10 @@ app.post("/movie", async (req, res) => {
       name: data.title,
       year: data.release_date,
       overview: data.overview,
+      poster_path: TMDB_BASE_POSTER + data.poster_path,
       _id: data.id
     });
+
     await myMovie.save();
     await esClient.index({
       index: "movies",

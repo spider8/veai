@@ -13,12 +13,28 @@ import SearchBox from "./Components/SearchBox";
 import PosterMovie from "./Components/PosterMovie";
 
 function App() {
-  const [showStory, setShowStory] = useState(false);
+  const [showStory, setShowStory] = useState(true);
   const [movies, setMovies] = useState([]);
+  const [msgSB, setMsgSB] = useState("Vamos procurar um filme! :D");
+  const [isLoading, setLoading] = useState(false);
 
   async function SearchMovie(value) {
-    const movies = await axios.get(`http://localhost:80/movie?search=${value}`);
-    setMovies(movies.data);
+    try {
+      setLoading(true);
+      setMsgSB(null);
+      const movies = await axios.get(
+        `http://localhost:80/movie?search=${value}`
+      );
+      if(movies.data.length === 0){
+        setMsgSB("Nenhum filme encontrado. Adicione o seu com botão abaixo.")
+      }
+      setMovies(movies.data);
+      setLoading(false);
+    } catch (error) {
+      setMsgSB("Ops, Algo de errado não está certo. ;(. Tente novamente.");
+      setMovies([]);
+      setLoading(false);
+    }
   }
 
   return (
@@ -26,11 +42,15 @@ function App() {
       <Header />
       <WrapContent>
         {showStory && <StoryCard />}
-        <SearchBar submit={SearchMovie} />
+        <SearchBar focus={_ => setShowStory(false)} submit={SearchMovie} />
         {!showStory && (
-          <SearchBox>
+          <SearchBox onClose={_ => setShowStory(true)} msg={msgSB}>
             {movies.map(movie => (
-              <PosterMovie key={movie.id} url={movie.poster_path} />
+              <PosterMovie
+                key={movie.id}
+                id={movie.id}
+                url={movie.poster_path}
+              />
             ))}
           </SearchBox>
         )}
