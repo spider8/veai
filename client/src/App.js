@@ -15,6 +15,7 @@ import PosterMovie from "./Components/PosterMovie";
 function App() {
   const [showStory, setShowStory] = useState(true);
   const [movies, setMovies] = useState([]);
+  const [msgSB, setMsgSB] = useState("Vamos procurar um filme! :D")
 
   async function SearchMovie(value) {
     const movies = await axios.get(`http://localhost:80/movie?search=${value}`);
@@ -29,7 +30,7 @@ function App() {
         {showStory && <StoryCard />}
         <SearchBar focus={_ => setShowStory(false)}  submit={SearchMovie} />
         {!showStory && (
-          <SearchBox>
+          <SearchBox onClose={_=>setShowStory(true)} msg={msgSB}>
             {movies.map(movie => (
               <PosterMovie key={movie.id} url={movie.poster_path} />
             ))}
