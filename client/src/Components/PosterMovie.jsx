@@ -1,8 +1,13 @@
 import React from "react"
 import "./PosterMovie.css"
 
-export default function PosterMovie({url}){
+import { Link } from "@reach/router";
+
+
+export default function PosterMovie({url, id}){
     return (
-        <img className="poster-movie-container" src={url} alt=""/>
+        <Link to={"/movie/" + id}>
+            <img className="poster-movie-container" src={url} alt=""/>
+        </Link>
     )
 }

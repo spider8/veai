@@ -20,30 +20,34 @@ function App() {
 
   async function SearchMovie(value) {
     try {
-      setLoading(true)
+      setLoading(true);
       setMsgSB(null);
-      const movies = await axios.get(`http://localhost:80/movie?search=${value}`);
+      const movies = await axios.get(
+        `http://localhost:80/movie?search=${value}`
+      );
       setMovies(movies.data);
       setLoading(false);
     } catch (error) {
-      setMsgSB("Ops, Algo de errado não está certo. ;(. Tente novamente.")
+      setMsgSB("Ops, Algo de errado não está certo. ;(. Tente novamente.");
       setMovies([]);
-      setLoading(false)
+      setLoading(false);
     }
-
   }
-
 
   return (
     <Container>
       <Header />
       <WrapContent>
         {showStory && <StoryCard />}
-        <SearchBar focus={_ => setShowStory(false)}  submit={SearchMovie} />
+        <SearchBar focus={_ => setShowStory(false)} submit={SearchMovie} />
         {!showStory && (
-          <SearchBox onClose={_=>setShowStory(true)} msg={msgSB}>
+          <SearchBox onClose={_ => setShowStory(true)} msg={msgSB}>
             {movies.map(movie => (
-              <PosterMovie key={movie.id} url={movie.poster_path} />
+              <PosterMovie
+                key={movie.id}
+                id={movie.id}
+                url={movie.poster_path}
+              />
             ))}
           </SearchBox>
         )}

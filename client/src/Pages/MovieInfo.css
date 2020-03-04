@@ -1,0 +1,36 @@
+.movie-info-container {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    background-image: linear-gradient(to bottom, #141414, #191919, #1e1e1e, #242424, #292929);
+    display: flex;
+    justify-items: center;
+    color: white;
+  }
+
+.movie-info-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin: auto;
+    padding: 20px;
+}
+
+.movie-info-poster {
+    border: 3px solid white;
+    height: 500px;
+    margin-right: 20px;
+}
+
+.movie-info-back-button{
+    width: 4rem;
+    height: 4rem;
+    background: #F40612;
+    border-radius: 50%;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    box-shadow: 0 6px 14px 0 #666;
+
+}
