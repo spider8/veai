@@ -25,6 +25,9 @@ function App() {
       const movies = await axios.get(
         `http://localhost:80/movie?search=${value}`
       );
+      if(movies.data.length === 0){
+        setMsgSB("Nenhum filme encontrado. Adicione o seu com botão abaixo.")
+      }
       setMovies(movies.data);
       setLoading(false);
     } catch (error) {
