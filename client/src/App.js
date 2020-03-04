@@ -15,11 +15,22 @@ import PosterMovie from "./Components/PosterMovie";
 function App() {
   const [showStory, setShowStory] = useState(true);
   const [movies, setMovies] = useState([]);
-  const [msgSB, setMsgSB] = useState("Vamos procurar um filme! :D")
+  const [msgSB, setMsgSB] = useState("Vamos procurar um filme! :D");
+  const [isLoading, setLoading] = useState(false);
 
   async function SearchMovie(value) {
-    const movies = await axios.get(`http://localhost:80/movie?search=${value}`);
-    setMovies(movies.data);
+    try {
+      setLoading(true)
+      setMsgSB(null);
+      const movies = await axios.get(`http://localhost:80/movie?search=${value}`);
+      setMovies(movies.data);
+      setLoading(false);
+    } catch (error) {
+      setMsgSB("Ops, Algo de errado não está certo. ;(. Tente novamente.")
+      setMovies([]);
+      setLoading(false)
+    }
+
   }
 
 
