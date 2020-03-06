@@ -14,13 +14,13 @@ export default function AddMovie(){
             e.preventDefault()
             setRequestStatus({...requestStatus, status: "Carregando"})
             try {
-                const result = await axios.post(`http://localhost:80/movie?name=${name}&year=${year}`)
+                await axios.post(`http://localhost:80/movie?name=${name}&year=${year}`)
                 setRequestStatus({class: "add-movie-sucess", status: "Sucesso!"})
             } catch (error) {
                 setRequestStatus({class: "add-movie-error", status: ":("})
             }
         },
-        [name, year],
+        [name, year, requestStatus],
     )
 
     return (
