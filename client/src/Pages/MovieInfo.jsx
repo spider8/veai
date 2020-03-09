@@ -6,7 +6,7 @@ import { MdArrowBack } from "react-icons/md";
 import { navigate } from "@reach/router"
 
 export default function MovieInfo({ id }) {
-  const { status, data, error } = useQuery("movieDetail", async _ => {
+  const { status, data } = useQuery("movieDetail", async _ => {
     return await axios.get("http://localhost:80/movie/" + id);
   });
 

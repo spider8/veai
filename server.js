@@ -39,7 +39,7 @@ var movieSchema = new Schema({
   name: { type: String, required: true },
   year: { type: String, required: true },
   overview: { type: String, required: true },
-  poster_path: {type: String, required: true},
+  poster_path: { type: String, required: true },
   _id: { type: Number, required: true }
 });
 
@@ -67,7 +67,7 @@ app.get("/movie", async (req, res) => {
     });
 
     var data = body.hits.hits.map(movie => movie._source);
-    data.forEach(movie => movie.poster_path = TMDB_BASE_POSTER+movie.poster_path);
+    data.forEach(movie => movie.poster_path = TMDB_BASE_POSTER + movie.poster_path);
     res.send(data);
   } catch (error) {
     res.status(404);
@@ -75,9 +75,9 @@ app.get("/movie", async (req, res) => {
   }
 });
 
-app.get("/movie/:id", async(req, res) =>{
-  const {id} = req.params;
-  if(!id){
+app.get("/movie/:id", async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
     res.status(409).send("Id param required")
   }
   const data = await Movie.findById(id);
@@ -99,7 +99,7 @@ app.post("/movie", async (req, res) => {
     const data = result.data.results.shift();
 
     if (await Movie.findById(data.id)) {
-      return res.status(409).send("Movie already indexed");
+      return res.status(409).send("Filme já indexado.");
     }
 
     const myMovie = new Movie({
@@ -117,8 +117,8 @@ app.post("/movie", async (req, res) => {
     });
     res.send(data);
   } catch (error) {
-    res.status(401);
-    res.send(error);
+    res.status(404);
+    res.send("Aconteceu um erro ao indexar o filme.");
   }
 });
 

@@ -7,10 +7,15 @@
   border-radius: 2px;
   margin-right: 1rem;
   padding:1rem;
+  width: 910px;
+  height: 86px;
 }
-
+.add-movie-container > h1 {
+    color: white;
+}
 .add-movie-button {
     color: white;
+    background: #F40612;
     border:none;
     height: 100%;
     font-size: 30px;

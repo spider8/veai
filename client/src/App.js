@@ -16,7 +16,7 @@ function App() {
   const [showStory, setShowStory] = useState(true);
   const [movies, setMovies] = useState([]);
   const [msgSB, setMsgSB] = useState("Vamos procurar um filme! :D");
-  const [isLoading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   async function SearchMovie(value) {
     try {
@@ -25,7 +25,7 @@ function App() {
       const movies = await axios.get(
         `http://localhost:80/movie?search=${value}`
       );
-      if(movies.data.length === 0){
+      if (movies.data.length === 0) {
         setMsgSB("Nenhum filme encontrado. Adicione o seu com botão abaixo.")
       }
       setMovies(movies.data);
